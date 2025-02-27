@@ -1426,6 +1426,34 @@ My encoded response:  [274561, 519768, 128375, 93569, 92032, 616172, 128375, 790
 
 My decoded response:  Doughnuts are great!
 
+## 7. Project Narrative
 
+### Building the RSA Encryption Algorithm
 
--------------TODO => add sections 7-10--------
+In the subsections below I have provided an overview of my overall process and experiences when working on this project. These cover the interesting and fun aspects, as well as the challenging and sometimes difficult parts of the project. All of which I can confidently say helped provide a solid educational experience that allowed me to develop a stronger understanding of the RSA pattern and the core mathematical principles that make it possible.
+
+#### My Process
+
+My approach to this project was largely planned and mapped out against a provided structure to build the code for the RSA pattern in the weeks prior to our dedicated project week. This proved very helpful for quickly getting all of the coding components functional in that project week. That said, I did not incorporate my analysis and overview at the same time. I took the approach of code first, explain later. And while I've been around coding long enough to know that it should be plan first, code second I still dove head first into the code. I think a big part of this was I enjoyed the coding, puzzling and refinement to get something functional. 
+
+When it came to the analysis and my realization that I was going to need to spend significantly more time on that portion of the project my approach shifted to less trial and error and more meticulous digging through notes, text and resources to understand what I had quickly built. While I hadn't prepared for the time I needed to produce this analysis, this period was when I learned the most and I am really grateful for that experience. It was difficult and sometimes frustrating but oddly more satisfying in the end; to be able to explain it all. 
+
+#### Exchanging Keys and Codes with Classmates
+
+Once my code was working came the second fun part of the project. Exchanging keys and codes with my classmates and figuring out how to crack our codes (more about that discussed in section 8). Two things jumped out during this part of the project. Firstly, we got a chance to share more about ourselves through our exchange of encoded and decoded messages. It was a fun way to get to know who does and doesn't like donuts, who can stomach pineapple on pizza and who would travel to what fictional place. Secondly, attempting to decode other classmates' messages lead to me a) figuring out why my Decode() function wasn't working properly despite my Encode() function doing just fine and b) really getting to grips with modular inverses. This was a topic that had tripped me up during the weeks leading up to this project and having code not working that hinged on a properly calculated modular inverse meant I just had to figure it out. It all came down to ensuring a negative Bezout Coefficient was converted to positive. (For an overview see Section 3 and the Find_Private_Key_d() function. Like many other aspects of this project, the exchange of keys and code with classmates lead to a stronger understanding of what is going on at the core of the RSA pattern.
+
+#### Challenges
+
+The most challenging aspect of this project wasn't the coding itself. While I did run into the above mentioned negative modular inverse issue the code portion was the fun and straight forward part. The real challenge came in providing a clear and concise annotative overview of the project. This meant I didn't just need the code to work, I needed to be able to explain it and I needed that explanation to be well organized. For the latter part, the organization, I dove into my past experience writing lectures for web development courses and applied a similar approach. This provided an outline that I could stick to and organize my thoughts with. Next was the hard part, knowing what I was talking about. For this there was only one thing to do. I dove into the course text, my notes from the weeks leading up to this project and our online discussion forum. While this all took some time, I am happy to have been presented with this challenge. It gave me a push to really understand the material as well as acknowledge some less than useful time management practices.
+
+#### Helpful Resources
+
+While this project represents my own dive into the RSA encryption pattern it was in many aspects a community effort in part with my instructors, classmates and past developers who have left many bread crumbs, as well as solid explanations, in text books and web forums. Above all I would have to say the feedback, comments and helpful hints from my classmates in our classroom forum were invaluable. Their insights often pointed me towards solutions I hadn't considered and frequently helped clarify hunches into understanding. I think approaching this subject strictly on my own would have been a much more daunting and difficult task. I am appreciative of all the support I found during this project.  
+
+#### My Best Mistake
+
+The best mistake I made during this project was underestimating the time I needed to adequately provide an analytical overview of each section of the project. The coding portion proved to be pretty straight forward and time efficient, largely due to a well mapped out course that provided a preparatory lead up to this project. I was fairly certain that the analytics would follow a similar timeline for me but I was mistaken. The reason I consider this oversight in time for analysis my best mistake is because it forced me to dive deep into the core concepts of the RSA pattern in order to really to understand them, well enough so to be able to explain them. To that end I feel confident that, while I have more to learn, I can at least speak on the topic. I hope the analysis and overview I have provided above echo that sentiment. 
+
+What I appreciate the most about having completed this project is not just having a functional RSA pattern but also gaining a solid grasp of the topic. Additionally working alongside other learners throughout the project has been incredibly rewarding. Sharing insights and troubleshooting together highlights the value of collaboration which makes the experience that much more educational and enjoyable. 
+
+-------------TODO => add sections 8-10--------
