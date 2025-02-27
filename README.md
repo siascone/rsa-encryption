@@ -1456,4 +1456,170 @@ The best mistake I made during this project was underestimating the time I neede
 
 What I appreciate the most about having completed this project is not just having a functional RSA pattern but also gaining a solid grasp of the topic. Additionally working alongside other learners throughout the project has been incredibly rewarding. Sharing insights and troubleshooting together highlights the value of collaboration which makes the experience that much more educational and enjoyable. 
 
--------------TODO => add sections 8-10--------
+## 8. How to Break Code
+
+In this section we will discuss two potential flaws in our RSA pattern that can lead to an ability to break our encryption pattern.
+- The first has to do with factorization to discover the original primes ***p*** and ***q*** that define our Private and Public Keys.
+    - We will discuss that while this approach can work in theory and at small scales, it has large scale impracticalities.
+- The second potential flaw we'll discuss has to do with pattern recognition and frequency analysis.
+    - We'll discuss how our early examples accounted for this and how our final RSA algorithm left this hole.
+    - We'll also cover a few approaches to solve this issue.
+- In Section 9 we will test our code breaking algorithm against messages and private keys provided by fellow developers.
+
+### Brute Force Factoring
+
+As discussed earlier in our analysis of the RSA pattern, the Public and Private Keys used to encrypt and decrypt messages are dependent on two different prime numbers ***p*** and ***q***.
+- It is this ***p*** and ***q*** that give us our ***n***, ***e*** and ***d***.
+- And it is essential for the security of our RSA pattern that these two primes are never exposed.
+
+With that said, here's the question: if we know ***n*** is the product of ***p*** and ***q***, and we know that ***p*** and ***q*** are prime, then ***n*** must be a semiprime number (meaning ***n*** and has no other factors besides ***1, p, q*** and ***n***), does that mean we should be able to factor ***n***, and the first factor we find should be one of either ***p*** or ***q***?
+- The answer is yes, that is correct.
+- However what if the ***p*** and ***q*** used are significantly large primes with hundreds or more digits?
+    - ***n*** would also be a significantly large number.
+    - With ***n*** significantly large it becomes computationally infeasible to factor. 
+        - There just isn't enough time to make the factorization of a very large number worthwhile.
+        - It could take years and rest assured by the time the ***p*** and ***q*** were discovered a new set would already be in use. 
+    
+For the sake of argument though, let's test it out. So far our examples have used relatively small ***p***s and ***q***s. 
+- In the code below we have a brute force factorization algorithm.
+    - It takes in an integer and starting with 2 it checks for factors.
+    - If it reaches the square root of the input integer without finding a factor it stops.
+        - We stop at the square root of the input because we know that as a rule, any composite integer (an integer that is the product of two other integers) must have a prime factor less than its square root.
+    - If it finds a factor before reaching the square root we know we have found one of the two prime factors, which we'll call ***p***.
+    - Our function then calculates the corresponding prime, ***q***, by simple division of ***n*** by ***p***.
+- If we have intercepted a ***Public Key (n, e)*** we can now factor out the starting ***p*** and ***q*** and can calculate the corresponding ***Private Key (n, d)*** allowing us to decode an intercepted message.
+    - Remember though, this will only work with small numbers, the bigger the number the more the time it will take to factor. Eventually you will run out of time.
+
+```python
+
+def factorize(n):
+
+    for i in range(2, int(math.sqrt(n))): # iterate from 2 to sqrt(n) to find a factor p
+        if n % i == 0: # check for factors, if n / i has no remainder then it is a factor
+            p = i # set p to i (factor of n)
+            q = n // p # calculate q as corresponding factor to p
+            
+            return (p, q)
+    
+    return False # if we don't find any factors return False
+
+```
+
+#### Test of Factorize(n) Function
+
+We'll use a small n provided by a former CSPB 2824 student.
+
+```python
+
+# Test of factorize(n)
+import math
+
+# Public Key and encoded message of former CSPB 2824 student
+n, e = 703, 113
+encoded_message = [544, 472, 233, 242, 250, 555, 591, 550, 376, 364, 210, 165, 526, 47, 555, 95, 476, 210, 242, 165, 95, 233, 526, 210, 376, 95, 233, 242, 364, 210, 242, 224, 376, 95, 364, 233, 47, 242, 210, 555, 376, 165, 472, 242, 555, 410, 242, 250, 95, 233, 233, 47, 145]
+
+# Factorization of n
+factorized_n = factorize(n)
+p = factorized_n[0]
+q = factorized_n[1]
+
+# Calculate private key d
+d = Find_Private_Key_d(113, p, q)
+
+# Decode encoded_message
+decoded_message = Decode(n, d, encoded_message)
+
+print(f"p and q: {p}, {q}")
+print("Public Key n: ", n)
+print("Public Key e: ", e)
+print("Private Key d: ", d)
+print("---")
+print("Decoded message: ", decoded_message)
+
+```
+
+p and q: 19, 37
+Public Key n:  703
+Public Key e:  113
+Private Key d:  281
+
+---
+
+Decoded message:  The Conquistador's treasure is buried south of Creed.
+
+***Nice!*** Our factorization works to break this code. 
+- However, as we mentioned, if the numbers get bigger this takes more time. 
+
+Let's try again with a larger ***n***. The following example should take a bit more time and illustrate the point that with numbers the size used in practice with RSA this approach becomes ineffective.
+- While the following example will only take a minute and a half and factors a number with 19 digits, the numbers used in practice would have hundreds if not thousands of digits.
+    - Consider the impact on time needed to factorize a number of that size.
+- The Public Key is (2147483666327352823, 5).
+
+```python
+
+# Test of factorize(n) with a larger input
+import time # we are using the time module to calculate the rough 
+            # time to complete factorization of 2147483666327352823
+
+start = time.time()
+print(factorize(2147483666327352823))
+end = time.time()
+
+lapsed_time = end - start
+print("Lapsed time in seconds: ", lapsed_time)
+
+```
+
+(1000000009, 2147483647)
+Lapsed time in seconds:  95.79953050613403
+
+Now that we can see factoring large numbers is time intensive, this potential flaw of being able to factorize ***n*** to discover ***p*** and ***q*** is no longer of concern provided we use sufficiently large ***p***s and ***q***s to generate our keys.
+
+With that out of the way, what about frequency analysis?
+
+### Breaking code with Frequency Analysis
+
+In our implementation of the RSA pattern we are encoding each numerical representation of a letter one at a time.
+- One potential flaw with this is that it opens our encoded messages up to frequency analysis.
+
+Let's look at the following example: 
+
+```python
+
+encoded_message = [234, 246, 485, 485, 1132, 1074, 501, 1132, 459, 485, 420]
+
+```
+
+If we take a closer look at the numbers involved in this message we can see that:
+- 485 appears 3 times with two of the appearances side by side
+- 1132 appears 2 times
+- and the rest appear only once
+
+From this we could use a frequency table for a languge we suspect this message is written in to start making some simple guesses and checks:
+- What letters commonly go together (ex: ee, ll, ss, mm, etc.)?
+- What letters appear the most, second most and so on?
+- What is the average length of words (ex: 5 letters for english)?
+    - Maybe this message is two words separated by a space?
+- And after a short while our guesses may lead to the following discovery
+
+- Example:
+    * --ee- ---e-
+    * --ll- ---l-
+    * --lle -e-l-
+    * --llo -o-l- # that kind of looks familiar
+    * ...
+    * Hello World
+
+As you can see with some simple pattern recognition and guess work it wouldn't take much break encryptions like this.
+- In fact the larger the message the higher the frequency of common letters and the easier it is to crack the cipher.
+
+So, how do we solve this? 
+- The simplest thing to do would be to group large collections of numerical representations of letters together before we run our FEM() algorithm.
+- Our original tests with TOFU did this on a small scale.
+    - On a large scale, think encoding entire sentences, paragraphs, pages perhaps etc. all at once and then combining those with other large blocks of encoded data.
+
+For a bit more code breaking let's go to section 9.
+
+
+
+-------------TODO => add sections 9-10--------
