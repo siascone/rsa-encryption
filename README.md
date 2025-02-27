@@ -1620,6 +1620,114 @@ So, how do we solve this?
 
 For a bit more code breaking let's go to section 9.
 
+## 9. Code Breaking: Complete Examples
+
+Below is a step by step break down of cracking a code provided by classmate Tyler Teichmann
+- The Public Key is: (4440097, 1193)
+- The encoded message is: 2308405, 79162, 4244727, 3355035, 2035913, 1723627, 3355035, 79162, 2914488, 1723627, 1054412, 4244727, 2035913, 3355035, 2914488, 2035913, 3355035, 1723627, 3134308, 2337190, 765334, 3083536, 1723627, 307890, 2337190, 454005, 2914488, 1723627, 307890, 4244727, 3282085, 1723627, 3159822, 3083536, 2914488, 4244727, 4046808, 1723627, 3355035, 79162, 3220943, 2035913, 1723627, 4046808, 2914488, 3134308, 2164157, 1723627, 3215733, 1723627, 843279, 2337190, 3355035, 1723627, 454005, 2337190, 3502570, 3282085, 1723627, 3355035, 2337190, 1723627, 1867558, 1347399, 3436266, 4358917, 1723627, 2948016, 3220943, 2671253, 2671253, 3220943, 2035913, 2914488, 307890, 2337190, 3282085, 454005, 2035913, 4089773
+
+We begin by factoring ***n***, 4440097 from the Public Key and saving these factors them to ***p*** and ***q*** variables
+
+```python
+
+# set up variables n and e from public key
+n = 4440097
+e = 1193
+
+# factorize out p and q from n
+factorized_n = factorize(n)
+p = factorized_n[0]
+q = factorized_n[1]
+
+print(f"The p and q used to generate the Public Key (4440097, 1193) are: {p}, {q}")
+
+```
+
+The p and q used to generate the Public Key (4440097, 1193) are: 1201, 3697
+
+Now that we have ***p*** and ***q*** we can use them in conjunction with ***e*** from the Public Key to find our Private Key ***d***.
+- All we need to do is pass them to ***Find_Private_Key_d()***.
+
+```python
+
+# calculate d with e, p and q
+d = Find_Private_Key_d(e, p, q)
+
+print("Private Key d: ", d)
+
+```
+
+Private Key d:  936857
+
+With the value of ***d*** calculated we can now pass it along with ***n*** and the encoded message to our ***Decode()*** function.
+
+```python
+
+# Decode the encoded message with n, d and encoded_message
+encoded_message = [2308405, 79162, 4244727, 3355035, 2035913, 1723627, 3355035, 79162, 2914488, 1723627, 1054412, 4244727, 2035913, 3355035, 2914488, 2035913, 3355035, 1723627, 3134308, 2337190, 765334, 3083536, 1723627, 307890, 2337190, 454005, 2914488, 1723627, 307890, 4244727, 3282085, 1723627, 3159822, 3083536, 2914488, 4244727, 4046808, 1723627, 3355035, 79162, 3220943, 2035913, 1723627, 4046808, 2914488, 3134308, 2164157, 1723627, 3215733, 1723627, 843279, 2337190, 3355035, 1723627, 454005, 2337190, 3502570, 3282085, 1723627, 3355035, 2337190, 1723627, 1867558, 1347399, 3436266, 4358917, 1723627, 2948016, 3220943, 2671253, 2671253, 3220943, 2035913, 2914488, 307890, 2337190, 3282085, 454005, 2035913, 4089773]
+
+decoded_message = Decode(n, d, encoded_message)
+
+print("The decoded message is: ", decoded_message)
+
+```
+
+The decoded message is:  Whats the fastest your code can break this key? I got down to 0.56 milliseconds!
+
+***Huzzah! We have successfully broken and decoded Tyler's message.***
+
+Equiped with both the Public and Private Keys we can now intercept, decode and send encoded messages back to Tyler.
+- Let's answer Tyler's question and double check that our message can be decoded.
+- First we need to see how long it is taking to factorize Tyler's Public Key ***n*** of 4440097
+
+```python
+
+# Calculate the time to break Tyler's code
+import time
+# import time
+
+start_time = time.time()
+
+factorized_n = factorize(n)
+p = factorized_n[0]
+q = factorized_n[1]
+
+d = Find_Private_Key_d(e, p, q)
+
+end_time = time.time()
+
+print(f"It has taken {(end_time - start_time) * 1000} miliseconds to break Tyler's code.")
+
+```
+
+It has taken 0.21696090698242188 miliseconds to break Tyler's code.
+
+Let's provide that response and make sure Tyler will be able to decode it.
+
+```python
+
+# Encode response message
+message = "My current approach is taking roughly 0.2ms to factor n and generate the Private Key d."
+
+encoded_res = Encode(n, e, message)
+
+print("my encoded response: ", encoded_res)
+print("---")
+# Verify decoding
+decoded_res = Decode(n, d, encoded_res)
+
+print("My decoded response: ", decoded_res)
+
+```
+
+my encoded response:  [1820537, 3134308, 1723627, 307890, 765334, 3083536, 3083536, 2914488, 3282085, 3355035, 1723627, 4244727, 236886, 236886, 3083536, 2337190, 4244727, 307890, 79162, 1723627, 3220943, 2035913, 1723627, 3355035, 4244727, 4046808, 3220943, 3282085, 843279, 1723627, 3083536, 2337190, 765334, 843279, 79162, 2671253, 3134308, 1723627, 1867558, 1347399, 590745, 2948016, 2035913, 1723627, 3355035, 2337190, 1723627, 1054412, 4244727, 307890, 3355035, 2337190, 3083536, 1723627, 3282085, 1723627, 4244727, 3282085, 454005, 1723627, 843279, 2914488, 3282085, 2914488, 3083536, 4244727, 3355035, 2914488, 1723627, 3355035, 79162, 2914488, 1723627, 1980138, 3083536, 3220943, 2585221, 4244727, 3355035, 2914488, 1723627, 739870, 2914488, 3134308, 1723627, 454005, 1347399]
+
+---
+
+My decoded response:  My current approach is taking roughly 0.2ms to factor n and generate the Private Key d.
+
+***Awesome! Looks like all is working with this cracked code!***
 
 
--------------TODO => add sections 9-10--------
+
+-------------TODO => add sections 10--------
