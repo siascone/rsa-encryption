@@ -609,4 +609,323 @@ Public and Private Key n:  1219
 Public Key e:  3
 Private Key d: 763
 
--------------TODO => add sections 4-10--------
+## 4. Code Package: En/Decode Your Messages
+---
+
+Now that we have everything to generate our ***Public and Private Keys***, as well as our handy ***FME*** algorithm, let's build the last few tools we need to put it all together and start encoding and decoding messages.
+
+Firstly we'll need a way to ***Convert_Text*** to numbers and a way to ***Convert_Num***bers to text. 
+- Once we have that set up we can then ***Encode*** and ***Decode*** messages.
+
+### The Convert_Text(_string) function
+
+The ***Convert_Text()*** function runs a simple iteration over a string and builds an output list of numerical representations of each character in the string. 
+
+In the implementation below:
+- We begin by initializing an empty list that will hold the integer representation of the characters in our input message.
+- We next iterate through each character in the string.
+    - Using Python's ***ord()*** function we convert the Unicode character (i.e. letter) into its integer representation.
+        - _It is this integer that we will be performing our ***FME*** calculations on using our Public and Private Keys_.
+    - After we have converted the letter into an integer we add this integer to our list.
+    - We do this process for each character of our input message in the order they were written.
+        - This preserves the order of our original message in number form.
+- Lastly we return our numerical representation of each letter in our message as an integer list.
+    - We'll be able to use this list in our ***Encode()*** function to encrypt each letter one at a time obscuring our message.
+
+```python
+
+def Convert_Text(_string):
+    """
+    Define this function such that it takes in a simple 
+    string such as "hello" and outputs the corresponding
+    standard list of integers (ascii) for each letter in the word hello.
+    For example:
+    _string = hello
+    integer_list = [104, 101, 108, 108, 111]
+    
+    You may use "ord()"
+    """
+    
+    # initialize an empty list to store int representation of string characters
+    integer_list = [] 
+    
+
+    for char in _string: # examine each character of the string one at a time
+        integer_list.append(ord(char)) # convert character to integer and push into storage list
+                                       # preserve original character order
+    return integer_list
+
+```
+
+#### Test for the Convert_Text(_string) function
+
+In the test below we are once again working with a message of TOFU.
+- You may notice that in this approach we are not grouping any of the letters and instead are working with them one at a time.
+    - In section 8 we'll explore why this practice may expose a potential flaw in our design.
+- You may also notice that the numbers representing our TOFU message are different than our first tests back in section 2.
+    - This is because in section 2 we used our own number cipher to represent letters as numbers.
+    - In our ***Convert_Text(_string)*** function we are using the Unicode conversion of letters to numbers via the ***ord()*** function.
+
+```python
+
+# Test for Convert_Text(_string)
+
+str = 'TOFU'
+print('The message TOFU converted to a list of Unicode integer representations is: ', Convert_Text(str))
+
+```
+
+The message TOFU converted to a list of Unicode integer representations is:  [84, 79, 70, 85]
+
+### The Convert_Num(_list) Function
+
+Now that we have a way to convert text to numbers let's work on a way to convert numbers back into text.
+
+Conveniently our Convert_Text() function returns a list that we can easily iterate through so we'll have our Convert_Num() function take in that list. 
+- From there we can convert each number to its letter representation and compile each letter into an output string.
+
+In the implementation below:
+- We begin by initializing an empty string that will eventually hold all of the characters of our message translated from a number list.
+- Next we iterate through each number in our input list.
+    - For each number we convert it to its corresponding Unicode letter.
+        - This is just the opposite procedure to what we did to get our letter to a number in the first place. 
+        - Python conveniently provides us with the ***chr()*** function to take care of this work for us.
+    - Once converted we then concatenate each letter to our output string.
+- Finally we return our output string. This is our translated message.
+
+``` python
+
+def Convert_Num(_list):
+    """
+    Do the opposite of what you did in the Convert_Text
+    function defined above.
+    
+    Define this function such that it takes in a list of integers
+    and outputs the corresponding string (ascii).
+    
+    For example:
+    _list = [104, 101, 108, 108, 111]
+    _string = hello
+    """
+    
+    _string = ''
+    
+    for num in _list:
+        _string += chr(num)
+
+    return _string
+
+```
+
+#### Test for the Convert_Num(_list) function
+
+Below we test our ***Convert_Num()*** function with the numerical representation of our TOFU message from above.
+
+```python
+
+# Test for Convert_Num(_list)
+
+lst = [84, 79, 70, 85]
+print("The integer list, [84, 79, 70, 85], converted to correpsonding Unicode letters is: ", Convert_Num(lst))
+
+```
+
+The integer list, [84, 79, 70, 85], converted to correpsonding Unicode letters is:  TOFU
+
+With these two functions complete we have a way to turn our written messages into integer lists and back again. 
+
+However, these are not very secure. It wouldn't take someone long to figure out that our messages are just their Unicode numerical representations.
+- A Unicode lookup table could be used to crack the code at this stage. 
+
+So what's next? Enter ***Encode()*** and ***Decode()***. Two methods that will leverage all the hard work we did prior to this stage bringing our RSA encryption pattern full circle.
+
+### The Encode(n, e, message) Function
+
+Now the fun part. Securely encoding a message!
+
+The ***Encode()*** function is going to leverage all of the following:
+- Inputs:
+    - A ***Public Key (n, e)*** pair generated by the ***Find_Public_Key_e()*** function.
+    - A string message of letters to encode.
+- Helper Functions:
+    - ***Convert_Text()*** to convert the input message to an integer list.
+    - ***FME()*** to efficiently encrypt each number in our integer list using the ***Public Key (n, e)***.
+        - Recall from section 2 that our ***FME()*** function is going to take in an integer base, an exponent and a modulus.
+        - For our message conversion this will look like the following:
+            - integer base => an integer representing a letter.
+            - exponent => ***e*** from our ***Public Key (n, e)***.
+            - modulus => ***n*** from our ***Public Key (n, e)***.
+            - operation performed => ***integer^e mod n***.
+
+Let's take a look at the implementation below:
+- We begin by converting our input message to be encoded into its Unicode numerical representation.
+    - This is achieved with the use of our ***Convert_Text()*** function.
+    - We save this conversion list as ***message_nums***.
+- Next we initialize a new output list, ***cypher_text***, that will hold our encrypted numbers.
+- We then iterate through each number in ***message_nums***.
+    - For each number we perform ***FME()*** with ***e*** and ***n*** from our ***Public Key (e, n)***.
+    - Once we have an encrypted number we add it to our ***cipher_text*** list.
+- After we have completed this process for every number we then return our new encoded message, ***cipher_text***.
+    - This message is now ready to be securely sent to someone else.
+        - Without the corresponding ***Private Key (n, d)*** the message cannot be reliably decoded.
+
+```python
+
+def Encode(n, e, message):
+    """
+    Here, the message will be a string of characters.
+    Use the function Convert_Text from 
+    the basic tool set and get a list of numbers.
+    
+    Encode each of these numbers using n and e and
+    return the encoded cipher_text.
+    """
+    
+    message_nums = Convert_Text(message) # get list of message characters as numbers to encode
+    
+    cipher_text = [] # setup return list to hold encrypted numbers form message_nums
+    
+    for num in message_nums: # iterate through each number
+        encoded_num = FME(num, e, n) # perform fast modular exponentiation to encode each number
+        cipher_text.append(encoded_num) # add each encoded number to output list
+    
+    return cipher_text
+
+```
+
+#### Test for the Encode(n, e, message) Function
+
+Let's keep working with our ***TOFU*** message and with the ***Public Key (1219, 3)*** that we used in section 3.
+
+```python
+
+# Test for Encode(n, e, message)
+
+message = "TOFU"
+
+# Generate and extract Public Key (n, e)
+public_key = Find_Public_Key_e(53, 23) 
+n = public_key[0]
+e = public_key[1] 
+
+# Encode message using Public Key (n, e)
+encoded_message = Encode(n, e, message)
+
+# Print relevent data
+print("Message to be encoded: ", message)
+print("n: ", n)
+print("e: ", e)
+print("Encoded message: ", encoded_message)
+
+```
+
+Message to be encoded:  TOFU
+n:  1219
+e:  3
+Encoded message:  [270, 563, 461, 968]
+
+***Awesome! We are now encoding messages***.
+
+Let's Decode!
+
+### The Decode(n, d, cipher_text) Function
+
+The ***Decode()*** function works in almost the same way as the ***Encode()*** function. The key difference is that it relies on a corresponding ***Private Key (n, d)*** and converts numbers to text. Let's break it down:
+- Inputs:
+    - A ***Private Key (n, d)*** pair generated by the ***Find_Private_Key_d()*** function.
+    - An encoded message integer list.
+- Helper Functions:
+    - ***Convert_Num()*** to convert the input message to a character string.
+    - ***FME()*** to efficiently decrypt each number in our integer list using the ***Private Key (n, d)***.
+        - Recall our discussion in section 3 on modular inverses and how we can use ***FME*** to work both directions provided that we have the same ***n*** and corresponding modular inverse, ***d***, of ***e*** from our Public and Private Keys.
+        - Just as with ***Encode()*** our message conversion will follow the same pattern but using ***d*** instead of ***e***:
+            - ***FME()*** will take an integer base, an exponent and a modulus.
+                - integer base => an integer representing a letter.
+                - exponent => ***d*** from our ***Private Key (n, d)***.
+                - modulus => ***n*** from our ***Private Key (n, d)***.
+                - operation performed => ***integer^d mod n***.
+
+In the implementation below:
+- We begin by initializing an empty return ***message*** string.
+- Next we set up a storage list to house our decrypted integers, ***decoded_nums***.
+- We then iterate through each number in our input ***cipher_text***.
+    - NOTE: This input ***cipher_text*** is the same return object from ***Encode()***.
+    - With each number in the list we use ***FME()*** to *decode* the number with the modular inverse ***d*** of the ***e*** that was used to ***encode*** the message originally.
+    - Once a number is *decoded* we add it to our ***decoded_nums*** list.
+- After all of our input numbers from ***cipher_text*** have been decoded we then use ***Convert_Num()*** to translate these decoded numbers back into their Unicode letter representations. 
+    - The result should be our original message that was passed to ***Encode()***.
+
+```python
+
+def Decode(n, d, cipher_text):
+    """
+    Here, the cipher_text will be a list of integers.
+    First, you will decrypt each of those integers using 
+    n and d.
+    
+    Later, you will need to use the function Convert_Num from the 
+    basic toolset to recover the original message as a string. 
+    
+    """
+    
+    # initialize empty return string,
+    message = '' # could be left for initilization at converstion of num to letter
+    
+    decoded_nums = [] # initialize empty integer list for decoded numbers
+    
+    # iterate through each integer in input cipher_text
+    for num in cipher_text:
+        decoded_num = FME(num, d, n) # perform fast modular exponentiation to encode each number
+                                     # pass in d, modular inverse of e, to decode encoded FME
+        decoded_nums.append(decoded_num) # add decoded_num to decoded_nums list
+        
+    message = Convert_Num(decoded_nums) # convert decoded_nums integer list to character string
+    
+    return message
+
+```
+
+#### Test for the Decode(n, d, cipher_text) Function
+
+Continuing with our encrypted "TOFU" message we know the following:
+- Public Key (1219, 3)
+- p = 53, q = 23
+- Encoded "TOFU" resulted as 270, 563, 461, 968
+
+We now need to generate the corresponding ***Private Key (1219, d)*** and then ***Decode()*** our encrypted message 
+
+```python
+
+# Test for the Decode(n, d, cipher_text) function
+
+# known values
+original_message = "TOFU"
+p = 53
+q = 23
+n = p * q
+e = 3
+cipher_text = [270, 563, 461, 968]
+
+# Generate Private Key (1219, d)
+d = Find_Private_Key_d(e, p, q)
+
+decoded_message = Decode(n, d, cipher_text)
+
+print("Original message to be encoded: ", original_message)
+print("Encoded message: ", cipher_text)
+print("n: ", n)
+print("d: ", d)
+print("Decoded message: ", decoded_message)
+
+```
+
+Original message to be encoded:  TOFU
+Encoded message:  [270, 563, 461, 968]
+n:  1219
+d:  763
+Decoded message:  TOFU
+
+***Fantastic! It works! Now how about a comprehensive code demo?***
+
+
+-------------TODO => add sections 5-10--------
