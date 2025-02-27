@@ -1154,7 +1154,239 @@ print(f"The direct approach calculated 198943^1281276 mod 10011 in {direct_end -
 FME calculated 198943^1281276 mod 10011 in 3.886222839355469e-05 seconds.
 The direct approach calculated 198943^1281276 mod 10011 in 4.271411418914795 seconds.
 
+## 6. Code Exchange Results
+
+Alright, now that we have everything working let's take a look at some code exchanges with some other developers working with the RSA Pattern.
+
+The exchanges that follow are from the Fall 2024 CSPB 2824 Discrete Structures Course at CU Boulder taught by Professors Stade and Craven.
+
+### Code Exchange 1
+
+First post from Professor Stade
+
+```python
+
+# Public Key
+n, e = 5251, 3  
+
+# # Private Key
+n, d = 5251, 3403
+
+# Original encoded Message
+encoded_message = [2128, 1150, 4250, 1349, 1262, 3336, 2371, 2497, 519, 1262, 1263, 1105, 3336, 1349, 1262, 2310, 1105, 3336, 4115, 762, 2405, 1263, 1105, 3336, 1262, 1349, 1150, 1105, 1262, 506, 1105, 1105, 4723, 2405, 2497, 519, 1262, 1974, 2371, 58, 1262, 519, 1105, 1349, 1262, 4839, 1150, 1105, 2497, 1262, 1974, 2371, 58, 762, 1262, 13, 4679, 1573, 1262, 4115, 2371, 2310, 1105, 1262, 2405, 3336, 1262, 4839, 2371, 762, 1560, 2405, 2497, 519, 3250]
+print("Professor Stade's original encoded message: ", encoded_message)
+print("---")
+
+# Original decoded message
+decoded_message = Decode(n, d, encoded_message)
+print("Professor Stade's decoded message: ", decoded_message)
+print("---")
+
+# Response message
+encoded_res = Encode(n, e, "Feels So Good, by Chuck Mangione")
+print("My encoded response: ", encoded_res)
+print("---")
+
+decoded_res = Decode(n, d, encoded_res)
+print("My decoded response: ", decoded_res)
+
+```
+
+Professor Stade's original encoded message:  [2128, 1150, 4250, 1349, 1262, 3336, 2371, 2497, 519, 1262, 1263, 1105, 3336, 1349, 1262, 2310, 1105, 3336, 4115, 762, 2405, 1263, 1105, 3336, 1262, 1349, 1150, 1105, 1262, 506, 1105, 1105, 4723, 2405, 2497, 519, 1262, 1974, 2371, 58, 1262, 519, 1105, 1349, 1262, 4839, 1150, 1105, 2497, 1262, 1974, 2371, 58, 762, 1262, 13, 4679, 1573, 1262, 4115, 2371, 2310, 1105, 1262, 2405, 3336, 1262, 4839, 2371, 762, 1560, 2405, 2497, 519, 3250]
+---
+Professor Stade's decoded message:  What song best describes the feeling you get when your RSA code is working?
+---
+My encoded response:  [1685, 1105, 1105, 4723, 3336, 1262, 4679, 2371, 1262, 843, 2371, 2371, 2310, 1168, 1262, 1263, 1974, 1262, 1456, 1150, 58, 4115, 1560, 1262, 4947, 4250, 2497, 519, 2405, 2371, 2497, 1105]
+---
+My decoded response:  Feels So Good, by Chuck Mangione
+
+### Code Exchange 2
+
+Post from Bennett Silverman
+
+```python
+
+# Public Key
+n, e = 36437, 35921   
+
+# # Private Key
+n, d = 36437, 28733
+
+# Original encoded message
+encoded_message = [28414, 32539, 30036, 33410, 30036, 32392, 27635, 19942, 32392, 35842, 18874, 30036, 32392, 32662, 27635, 25684, 229, 27635, 35842, 18874, 13845, 24081, 32392, 5916, 24081, 13845, 25684, 30036, 32392, 1210, 35842, 9524, 32392, 34374, 35842, 9524, 24081, 11098, 32392, 24081, 27635, 5082, 30036, 32392, 229, 35842, 32392, 229, 33410, 13845, 24126, 30036, 24081, 32392, 229, 35842, 1974]
+print("Bennett's original encoded message: ", encoded_message)
+print("---")
+
+# Original decoded message
+decoded_message = Decode(n, d, encoded_message)
+print("Bennet's decoded message: ", decoded_message)
+print("---")
+
+# Response Message
+encoded_res = Encode(n, e, "The fictional place I would like to travel to is Perihelion, a bot-pioleted, wormhole-capable space research and teaching vessel from Martha Wells' series The Murderbot Diaries. Perihelion is afectionatly know to the main character as ART.")
+print("My encoded response: ", encoded_res)
+print("---")
+
+decoded_res = Decode(n, d, encoded_res)
+print("My decoded response: ", decoded_res)
+
+```
+
+Bennett's original encoded message:  [28414, 32539, 30036, 33410, 30036, 32392, 27635, 19942, 32392, 35842, 18874, 30036, 32392, 32662, 27635, 25684, 229, 27635, 35842, 18874, 13845, 24081, 32392, 5916, 24081, 13845, 25684, 30036, 32392, 1210, 35842, 9524, 32392, 34374, 35842, 9524, 24081, 11098, 32392, 24081, 27635, 5082, 30036, 32392, 229, 35842, 32392, 229, 33410, 13845, 24126, 30036, 24081, 32392, 229, 35842, 1974]
+---
+Bennet's decoded message:  Where is one fictional place you would like to travel to?
+---
+My encoded response:  [26312, 32539, 30036, 32392, 32662, 27635, 25684, 229, 27635, 35842, 18874, 13845, 24081, 32392, 5916, 24081, 13845, 25684, 30036, 32392, 24915, 32392, 34374, 35842, 9524, 24081, 11098, 32392, 24081, 27635, 5082, 30036, 32392, 229, 35842, 32392, 229, 33410, 13845, 24126, 30036, 24081, 32392, 229, 35842, 32392, 27635, 19942, 32392, 20590, 30036, 33410, 27635, 32539, 30036, 24081, 27635, 35842, 18874, 2362, 32392, 13845, 32392, 26319, 35842, 229, 11157, 5916, 27635, 35842, 24081, 30036, 229, 30036, 11098, 2362, 32392, 34374, 35842, 33410, 23996, 32539, 35842, 24081, 30036, 11157, 25684, 13845, 5916, 13845, 26319, 24081, 30036, 32392, 19942, 5916, 13845, 25684, 30036, 32392, 33410, 30036, 19942, 30036, 13845, 33410, 25684, 32539, 32392, 13845, 18874, 11098, 32392, 229, 30036, 13845, 25684, 32539, 27635, 18874, 17697, 32392, 24126, 30036, 19942, 19942, 30036, 24081, 32392, 32662, 33410, 35842, 23996, 32392, 25175, 13845, 33410, 229, 32539, 13845, 32392, 28414, 30036, 24081, 24081, 19942, 6187, 32392, 19942, 30036, 33410, 27635, 30036, 19942, 32392, 26312, 32539, 30036, 32392, 25175, 9524, 33410, 11098, 30036, 33410, 26319, 35842, 229, 32392, 24394, 27635, 13845, 33410, 27635, 30036, 19942, 21052, 32392, 20590, 30036, 33410, 27635, 32539, 30036, 24081, 27635, 35842, 18874, 32392, 27635, 19942, 32392, 13845, 32662, 30036, 25684, 229, 27635, 35842, 18874, 13845, 229, 24081, 1210, 32392, 5082, 18874, 35842, 34374, 32392, 229, 35842, 32392, 229, 32539, 30036, 32392, 23996, 13845, 27635, 18874, 32392, 25684, 32539, 13845, 33410, 13845, 25684, 229, 30036, 33410, 32392, 13845, 19942, 32392, 27234, 6556, 26312, 21052]
+---
+My decoded response:  The fictional place I would like to travel to is Perihelion, a bot-pioleted, wormhole-capable space research and teaching vessel from Martha Wells' series The Murderbot Diaries. Perihelion is afectionatly know to the main character as ART.
+
+### Code Exchange 3
+
+Post from Tyler Bosford
+
+```python
+
+# Public Key
+n, e  = 17947 , 17669   
+
+# Private Key
+n, d = 17947, 24109
+
+# Original encoded message
+encoded_message = [4939, 14825, 3417, 759, 13124, 4553, 7700, 7150, 3417, 2058, 4553, 4553, 11007, 3417, 13124, 10324, 14825, 13124, 14825, 7150, 13124, 4553, 7700, 9076, 9076, 2058, 14449, 13124, 7668, 13124, 759, 2058, 10079, 13124, 10079, 3417, 759, 13124, 7700, 14275, 13124, 17225, 14825, 3417, 759, 15761]
+print("Tyler's original encoded message: ", encoded_message)
+print("---")
+
+# Original decoded message
+decoded_message = Decode(n, d, encoded_message)
+print("Tyler's decoded message: ", decoded_message)
+print("---")
+
+# My Response Message
+encoded_res = Encode(n, e, "Good question. I have always struggled with pineapple on pizza in the standard form of pineapple ham and a red sause. That said I do enjoy a bbq sause and pineapple flatbread with poblanos, and motzzarella")
+print("My encoded response: ", encoded_res)
+print("---")
+
+decoded_res = Decode(n, d, encoded_res)
+print("My decoded response: ", decoded_res)
+print("---")
+
+# Tyler's follow up response
+tyler_encoded_follow_up = [7668, 13124, 7591, 7700, 11007, 11007, 13124, 4954, 14825, 938, 7150, 14275, 13124, 14275, 6581, 3417, 13124, 16683, 11007, 2058, 14275, 16429, 4837, 3417, 2058, 17225, 13124, 2058, 759, 13124, 2058, 13124, 4553, 7700, 9076, 9076, 2058, 15761, 13124, 10838, 3417, 13124, 7150, 14825, 7591, 13124, 759, 6581, 2058, 4837, 3417, 13124, 2058, 13124, 16429, 14825, 7150, 17225, 13124, 11217, 7700, 2058, 13124, 4553, 7700, 9076, 9076, 2058, 13124, 14275, 14825, 4553, 4553, 7700, 7150, 10324, 759, 13124, 759, 14275, 4837, 14825, 7150, 10324, 3417, 4837, 13124, 14275, 6581, 2058, 7150, 13124, 2058, 11007, 11007, 13124, 14825, 14275, 6581, 3417, 4837, 13124, 16429, 14825, 7150, 17225, 759, 15761, 13124, 7668, 13124, 7591, 7700, 11007, 11007, 13124, 4837, 7700, 17225, 3417, 13124, 7700, 7150, 14275, 14825, 13124, 16429, 2058, 14275, 14275, 11007, 3417, 13124, 7591, 7700, 14275, 6581, 13124, 3417, 2058, 4954, 6581, 13124, 14825, 16683, 13124, 10079, 14825, 938]
+print("Tyler's follow up response encoded: ", tyler_encoded_follow_up)
+print("---")
+
+tyler_decoded_follow_up = Decode(n, d, tyler_encoded_follow_up)
+print("Tyler's follow up response decoded: ", tyler_decoded_follow_up)
+print("---")
+
+# My follow up response
+my_follow_up_encoded = Encode(n, e, "If by my slice or pie I can protect you, I will. You have my pizza peel")
+print("My follow up response encoded: ", my_follow_up_encoded)
+print("---")
+
+my_follow_up_decoded = Decode(n, d, my_follow_up_encoded)
+print("My follow up response decoded: ", my_follow_up_decoded)
+
+```
+
+Tyler's original encoded message:  [4939, 14825, 3417, 759, 13124, 4553, 7700, 7150, 3417, 2058, 4553, 4553, 11007, 3417, 13124, 10324, 14825, 13124, 14825, 7150, 13124, 4553, 7700, 9076, 9076, 2058, 14449, 13124, 7668, 13124, 759, 2058, 10079, 13124, 10079, 3417, 759, 13124, 7700, 14275, 13124, 17225, 14825, 3417, 759, 15761]
+---
+Tyler's decoded message:  Does pineapple go on pizza? I say yes it does.
+---
+My encoded response:  [12251, 14825, 14825, 17225, 13124, 12376, 938, 3417, 759, 14275, 7700, 14825, 7150, 15761, 13124, 7668, 13124, 6581, 2058, 11217, 3417, 13124, 2058, 11007, 7591, 2058, 10079, 759, 13124, 759, 14275, 4837, 938, 10324, 10324, 11007, 3417, 17225, 13124, 7591, 7700, 14275, 6581, 13124, 4553, 7700, 7150, 3417, 2058, 4553, 4553, 11007, 3417, 13124, 14825, 7150, 13124, 4553, 7700, 9076, 9076, 2058, 13124, 7700, 7150, 13124, 14275, 6581, 3417, 13124, 759, 14275, 2058, 7150, 17225, 2058, 4837, 17225, 13124, 16683, 14825, 4837, 6789, 13124, 14825, 16683, 13124, 4553, 7700, 7150, 3417, 2058, 4553, 4553, 11007, 3417, 13124, 6581, 2058, 6789, 13124, 2058, 7150, 17225, 13124, 2058, 13124, 4837, 3417, 17225, 13124, 759, 2058, 938, 759, 3417, 15761, 13124, 7842, 6581, 2058, 14275, 13124, 759, 2058, 7700, 17225, 13124, 7668, 13124, 17225, 14825, 13124, 3417, 7150, 8303, 14825, 10079, 13124, 2058, 13124, 16429, 16429, 12376, 13124, 759, 2058, 938, 759, 3417, 13124, 2058, 7150, 17225, 13124, 4553, 7700, 7150, 3417, 2058, 4553, 4553, 11007, 3417, 13124, 16683, 11007, 2058, 14275, 16429, 4837, 3417, 2058, 17225, 13124, 7591, 7700, 14275, 6581, 13124, 4553, 14825, 16429, 11007, 2058, 7150, 14825, 759, 6978, 13124, 2058, 7150, 17225, 13124, 6789, 14825, 14275, 9076, 9076, 2058, 4837, 3417, 11007, 11007, 2058]
+---
+My decoded response:  Good question. I have always struggled with pineapple on pizza in the standard form of pineapple ham and a red sause. That said I do enjoy a bbq sause and pineapple flatbread with poblanos, and motzzarella
+---
+Tyler's follow up response encoded:  [7668, 13124, 7591, 7700, 11007, 11007, 13124, 4954, 14825, 938, 7150, 14275, 13124, 14275, 6581, 3417, 13124, 16683, 11007, 2058, 14275, 16429, 4837, 3417, 2058, 17225, 13124, 2058, 759, 13124, 2058, 13124, 4553, 7700, 9076, 9076, 2058, 15761, 13124, 10838, 3417, 13124, 7150, 14825, 7591, 13124, 759, 6581, 2058, 4837, 3417, 13124, 2058, 13124, 16429, 14825, 7150, 17225, 13124, 11217, 7700, 2058, 13124, 4553, 7700, 9076, 9076, 2058, 13124, 14275, 14825, 4553, 4553, 7700, 7150, 10324, 759, 13124, 759, 14275, 4837, 14825, 7150, 10324, 3417, 4837, 13124, 14275, 6581, 2058, 7150, 13124, 2058, 11007, 11007, 13124, 14825, 14275, 6581, 3417, 4837, 13124, 16429, 14825, 7150, 17225, 759, 15761, 13124, 7668, 13124, 7591, 7700, 11007, 11007, 13124, 4837, 7700, 17225, 3417, 13124, 7700, 7150, 14275, 14825, 13124, 16429, 2058, 14275, 14275, 11007, 3417, 13124, 7591, 7700, 14275, 6581, 13124, 3417, 2058, 4954, 6581, 13124, 14825, 16683, 13124, 10079, 14825, 938]
+---
+Tyler's follow up response decoded:  I will count the flatbread as a pizza. We now share a bond via pizza toppings stronger than all other bonds. I will ride into battle with each of you
+---
+My follow up response encoded:  [7668, 16683, 13124, 16429, 10079, 13124, 6789, 10079, 13124, 759, 11007, 7700, 4954, 3417, 13124, 14825, 4837, 13124, 4553, 7700, 3417, 13124, 7668, 13124, 4954, 2058, 7150, 13124, 4553, 4837, 14825, 14275, 3417, 4954, 14275, 13124, 10079, 14825, 938, 6978, 13124, 7668, 13124, 7591, 7700, 11007, 11007, 15761, 13124, 12891, 14825, 938, 13124, 6581, 2058, 11217, 3417, 13124, 6789, 10079, 13124, 4553, 7700, 9076, 9076, 2058, 13124, 4553, 3417, 3417, 11007]
+---
+My follow up response decoded:  If by my slice or pie I can protect you, I will. You have my pizza peel
+
+### Code Exchange 4
+
+Post by Spencer Iascone (i.e. this one was my post)
+
+```python
+
+# Public Key
+n, e  =  1219, 3   
+
+# # Private Key
+n, d = 1219 , 763
+
+# My original encoded message
+message = "If you were a vegetable, what would you be?"
+encoded_message = Encode(n, e, message)
+print("My encoded message: ", encoded_message)
+print("---")
+
+# My original decoded message
+decoded_message = Decode(n, d, encoded_message)
+print("My decoded message: ", decoded_message)
+print("---")
+
+# First response from Anonymous Beaker encoded
+encoded_res = [1031, 246, 861, 1071, 782, 586, 1074, 156, 1074, 451, 1132, 782, 576, 485, 354, 1074, 246, 861, 576, 1074, 124, 246, 861, 1071, 782, 1073, 1074, 782, 1132, 1074, 156, 807, 451, 1074, 451, 1132, 782, 576, 485, 354, 1074, 124, 246, 861, 1071, 782, 1035]
+print("Response from Anonymous Beaker encoded: ", encoded_res)
+print("---")
+
+decoded_res = Decode(n, d, encoded_res)
+print("Response from Anonymous Beaker decoded: ", decoded_res)
+
+```
+
+My encoded message:  [156, 678, 1074, 354, 1132, 1066, 1074, 501, 246, 459, 246, 1074, 861, 1074, 1039, 246, 503, 246, 576, 861, 124, 485, 246, 1073, 1074, 501, 946, 861, 576, 1074, 501, 1132, 1066, 485, 420, 1074, 354, 1132, 1066, 1074, 124, 246, 152]
+---
+My decoded message:  If you were a vegetable, what would you be?
+---
+Response from Anonymous Beaker encoded:  [1031, 246, 861, 1071, 782, 586, 1074, 156, 1074, 451, 1132, 782, 576, 485, 354, 1074, 246, 861, 576, 1074, 124, 246, 861, 1071, 782, 1073, 1074, 782, 1132, 1074, 156, 807, 451, 1074, 451, 1132, 782, 576, 485, 354, 1074, 124, 246, 861, 1071, 782, 1035]
+---
+Response from Anonymous Beaker decoded:  Beans! I mostly eat beans, so I'm mostly beans.
+
+### Code exchange 5
+
+Post from Chad Clevenger
+
+```python
+
+# Public Key
+n, e  =  872021, 5  
+
+# Private Key
+n, d = 872021 , 345677
+
+# Original encoded essage
+encoded_message = [609192, 92032, 519768, 417634, 503409, 598939, 407510, 503409, 417634, 92032, 503409, 794165, 503409, 417634, 598939, 519768, 106633, 503409, 407510, 417634, 535193, 519768, 128375, 93569, 92032, 616172, 128375, 790791, 407510, 76645, 766469]
+print("Chad's encoded message: ", encoded_message)
+print("---")
+
+# Original decoded message
+decoded_message = Decode(n, d, encoded_message)
+print("Chad's decoded message: ", decoded_message)
+print("---")
+
+# My response message
+encoded_res = Encode(n, e, "Doughnuts are great!")
+print("My encoded response: ", encoded_res)
+print("---")
+
+decoded_res = Decode(n, d, encoded_res)
+print("My decoded response: ", decoded_res)
+
+```
+
+Chad's encoded message:  [609192, 92032, 519768, 417634, 503409, 598939, 407510, 503409, 417634, 92032, 503409, 794165, 503409, 417634, 598939, 519768, 106633, 503409, 407510, 417634, 535193, 519768, 128375, 93569, 92032, 616172, 128375, 790791, 407510, 76645, 766469]
+---
+Chad's decoded message:  Who else here loves doughnuts?!
+---
+My encoded response:  [274561, 519768, 128375, 93569, 92032, 616172, 128375, 790791, 407510, 417634, 549470, 794165, 503409, 417634, 93569, 794165, 503409, 549470, 790791, 766469]
+---
+My decoded response:  Doughnuts are great!
 
 
 
--------------TODO => add sections 6-10--------
+-------------TODO => add sections 7-10--------
